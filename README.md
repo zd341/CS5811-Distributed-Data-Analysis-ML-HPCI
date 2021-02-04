@@ -37,6 +37,6 @@ Data Cleaning = Aliyah and Qamar.
 Exploratory Data Analysis = Hussein and Rashmi. 
 
 
-![huhu](https://giphy.com/gifs/cartoon-the-lion-king-simba-DvMHwFYLVHlZe)
+![huhu](https://media.giphy.com/media/DvMHwFYLVHlZe/giphy.gif)
 
 
