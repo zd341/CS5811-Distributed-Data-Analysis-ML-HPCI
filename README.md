@@ -37,10 +37,8 @@ Data Cleaning: Aliyah and Qamar.
 Exploratory Data Analysis:Hussein and Rashmi. 
 
 
-<p align="center">
-  
+<p align="center">  
 ![huhu](https://media.giphy.com/media/DvMHwFYLVHlZe/giphy.gif)
-
 </p>
 
 
