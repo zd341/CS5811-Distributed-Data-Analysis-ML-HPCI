@@ -14,8 +14,8 @@
 
 Dataset Variables:-
 
-1. Show_id,
-2. Type,
+1. Show_id
+2. Type
 3. Title
 4. Director
 5. Country
