@@ -28,9 +28,13 @@ Missing data:-
 
 
 Tasks:-
-(In order of task dependence)
-Data Joining = Zaahir
-Data Cleaning = Aliyah and Qamar
-Exploratory Data Analysis = Hussein and Rashmi
+(In order of task dependence). 
+
+Data Joining = Zaahir. 
+
+Data Cleaning = Aliyah and Qamar. 
+
+Exploratory Data Analysis = Hussein and Rashmi. 
+
 
 
