@@ -1,9 +1,13 @@
-# CS5811--Distributed-Data-Analysis-ML-HPCI
+# CS5703-DISTRIBUTED DATA ANALYSIS
 
-Group Project - Netflix, Amazon Prime tv show streaming services, data and Rating. 
+## Group Project Pipeline for Data Visualisation
 
-Data sets available from: 
-![https://www.kaggle.com/nilimajauhari/amazon-prime-tv-shows](Amazon Prime)
-![https://www.kaggle.com/chasewillden/netflix-shows](Netflix)
 
+
+**Links to Primary datasets:-**
+
+
+1. Netflix dataset (Zaahir):-https://www.kaggle.com/chasewillden/netflix-shows.  
+
+2. Netflix dataset (Rashmi):-https://www.kaggle.com/shivamb/netflix-shows. 
 
