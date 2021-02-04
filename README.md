@@ -30,15 +30,19 @@ Missing data:-
 Tasks:-
 (In order of task dependence). 
 
-Data Joining = Zaahir. 
+Data Joining: Zaahir. 
 
-Data Cleaning = Aliyah and Qamar. 
+Data Cleaning: Aliyah and Qamar. 
 
-Exploratory Data Analysis = Hussein and Rashmi. 
+Exploratory Data Analysis:Hussein and Rashmi. 
 
 
-
+<p align="center">
+  
 ![huhu](https://media.giphy.com/media/DvMHwFYLVHlZe/giphy.gif)
+
+</p>
+
 
                                                          -Project read me ends here-
 
