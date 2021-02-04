@@ -37,8 +37,8 @@ Data Cleaning = Aliyah and Qamar.
 Exploratory Data Analysis = Hussein and Rashmi. 
 
 
-<center>
+
 ![huhu](https://media.giphy.com/media/DvMHwFYLVHlZe/giphy.gif)
-</>
+
                                                                            -Project read me ends here-
 
