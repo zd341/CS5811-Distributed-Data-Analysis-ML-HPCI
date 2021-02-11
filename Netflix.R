@@ -131,6 +131,9 @@ write_csv(netflix_version6,file="netflix_version6.csv")
 
 sum(is.na(test))
 
-# View(test) # Use this code if you want to view the new dataset
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Visualising Missing Data
+## View(test) # Use this code if you want to view the new dataset
 
 visdat::vis_miss(netflix_version6) #Produces a visualisation of missing data in added columns
