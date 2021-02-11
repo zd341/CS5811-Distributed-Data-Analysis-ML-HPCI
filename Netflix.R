@@ -93,5 +93,19 @@ netflix_version4_removed_columns  <- netflix_version4 %>%
 
 View(netflix_version4_removed_columns)
 
+#write_csv(netflix_version4_removed_columns,file="netflix_version5.csv")  
 
+new_netflix_version4_removed_columns <- netflix_version4_removed_columns %>% 
+  left_join(netflix_originals, by=c("title"="Title"),suffix =c("_previous","_originals")) 
 
+new_netflix_version4_removed_columns %>% 
+  colnames()
+  
+test <- new_netflix_version4_removed_columns %>% 
+  select(show_id_imdb,title,type_orginal,director_orginal,
+         country_orginal,date_added_orginal,release_year_orginal,
+         listed_in_orginal,rating_imdb,description_orginal,Original.Network,
+         Seasons,duration,Genre)
+sum(is.na(test))
+
+View(test)
