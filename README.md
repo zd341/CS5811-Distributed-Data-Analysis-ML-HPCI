@@ -34,7 +34,7 @@ Data Joining: Zaahir.
 
 Data Cleaning: Aliyah and Qamar. 
 
-Exploratory Data Analysis:Hussein and Rashmi. 
+Exploratory Data Analysis: Hussein and Rashmi. 
 
 
 
