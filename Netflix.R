@@ -137,3 +137,11 @@ sum(is.na(test))
 ## View(test) # Use this code if you want to view the new dataset
 
 visdat::vis_miss(netflix_version6) #Produces a visualisation of missing data in added columns
+
+
+
+
+
+
+
+
