@@ -22,3 +22,21 @@ dim(netflix_version2)
 
 
 
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+#(Zaahir- joining data)
+library(dplyr)
+netflix_version2
+
+
+imdb_rating <- read.csv("mycsvfile.csv")
+
+netflix_version3 <- netflix_version2 %>% 
+left_join(imdb_rating, by ="title",suffix =c("_orginal","imdb")) 
+write_rds(netflix_version3,file = "netflix_version3.rda")
+
+
+netflix_version4 <- netflix_version2 %>% 
+inner_join(imdb_rating, by ="title",suffix =c("_orginal","imdb")) 
+write_rds(netflix_version4,file= "netflix_version4.rda")
+
+
