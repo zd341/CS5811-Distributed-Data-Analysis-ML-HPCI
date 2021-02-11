@@ -11,6 +11,8 @@
 
 2. Netflix dataset (Rashmi):-https://www.kaggle.com/shivamb/netflix-shows. 
 
+3. Netflix Originals (Aliyah):- https://www.kaggle.com/abhimanyudasarwar/netflix-originals
+
 
 Dataset Variables:-
 
