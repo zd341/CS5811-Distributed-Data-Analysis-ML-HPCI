@@ -1,12 +1,13 @@
 ### Libraries ###
 
 
-if(require(tidyverse) == FALSE)
+if(require(tidyverse,visdat) == FALSE)
 		
 	{
 		
 		# Packages are installed if the statement is false
 		#install.packages('tidyverse')
+    install.packages('visdat')
 		
 		# Loading libraries
 		library(tidyverse)
@@ -70,11 +71,12 @@ netflix_version4 <- read.csv("netflix_version4.csv")
 colnames(netflix_originals)
 colnames(netflix_version4)
 
-head(netflix_version4)
+# Removing the extra first column
 
 netflix_version4 <- netflix_version4[,2:22]
 View(netflix_version4)
 
+# Removing the unnecessary columns
 netflix_version4_removed_columns  <- netflix_version4 %>% 
   select(
     show_id_imdb,
@@ -91,21 +93,44 @@ netflix_version4_removed_columns  <- netflix_version4 %>%
     rating_imdb
   )
 
-View(netflix_version4_removed_columns)
 
-#write_csv(netflix_version4_removed_columns,file="netflix_version5.csv")  
+# View(netflix_version4_removed_columns) #use this code only if you want to view results
 
+#write_csv(netflix_version4_removed_columns,file="netflix_version5.csv") #Use this code if you want to save anything to your local machine  
+
+## Joining the Netflix Originals Dataset Columns to ours
 new_netflix_version4_removed_columns <- netflix_version4_removed_columns %>% 
   left_join(netflix_originals, by=c("title"="Title"),suffix =c("_previous","_originals")) 
 
+## Checking the column names 
 new_netflix_version4_removed_columns %>% 
   colnames()
-  
-test <- new_netflix_version4_removed_columns %>% 
-  select(show_id_imdb,title,type_orginal,director_orginal,
-         country_orginal,date_added_orginal,release_year_orginal,
-         listed_in_orginal,rating_imdb,description_orginal,Original.Network,
-         Seasons,duration,Genre)
+
+## Removing the unncessary columns 
+netflix_version6 <- new_netflix_version4_removed_columns %>%
+  select(
+    show_id_imdb,
+    title,
+    type_orginal,
+    director_orginal,
+    country_orginal,
+    date_added_orginal,
+    release_year_orginal,
+    listed_in_orginal,
+    rating_imdb,
+    description_orginal,
+    Original.Network,
+    Seasons,
+    duration,
+    Genre
+  )
+
+write_csv(netflix_version6,file="netflix_version6.csv")
+
+## The number of NA's produced. 
+
 sum(is.na(test))
 
-View(test)
+# View(test) # Use this code if you want to view the new dataset
+
+visdat::vis_miss(netflix_version6) #Produces a visualisation of missing data in added columns
