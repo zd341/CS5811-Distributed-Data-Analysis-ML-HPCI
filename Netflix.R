@@ -1,5 +1,20 @@
+### Libraries ###
 
 
+if(require(tidyverse,RCurl) == FALSE)
+		
+	{
+		
+		# Packages are installed if the statement is false
+		install.packages('tidyverse')
+		install.packages('RCurl')
+		
+		# Loading libraries
+		library(tidyverse,RCurl)
+	}
+	
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+#(Zaahir- Processing First Dataset)
 # 1. Import dataset
 
 netflix_version1 <-  read.csv("netflix_titles.csv")
@@ -22,3 +37,27 @@ dim(netflix_version2)
 
 
 
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+#(Zaahir- joining data)
+
+
+library(dplyr)
+netflix_version2
+
+
+imdb_rating <- read.csv("mycsvfile.csv")
+
+netflix_version3 <- netflix_version2 %>% 
+left_join(imdb_rating, by ="title",suffix =c("_orginal","imdb")) 
+# write_rds(netflix_version3,file = "netflix_version3.rda")
+# write.csv(netflix_version3,file= "netflix_version3.csv")
+
+
+netflix_version4 <- netflix_version2 %>% 
+inner_join(imdb_rating, by ="title",suffix =c("_orginal","imdb")) 
+# write_rds(netflix_version4,file= "netflix_version4.rda")
+# write.csv(netflix_version4,file= "netflix_version4.csv")
+
+
+sum(is.na(netflix_version3))
+sum(is.na(netflix_version4))
