@@ -1,0 +1,147 @@
+---
+title: "GROUPPP"
+output: html_document
+---
+1. Load data 
+```{r}
+str(netflix_version6)
+```
+
+2. Removing Columns 
+
+# We removed show Seasons as the seasons are also included in duration
+# We removed Genre because it was similar to listen in, as well as having too many NA's
+# We removed Show Id as it was the id for imbd which has nothing to do with netflix
+```{r}
+# Removing columns that are not necassary for the data 
+netflix_version6 = select(netflix_version6, -c(show_id_imdb, Seasons, Genre,))
+view(netflix_version6)
+```
+
+
+
+3. Checking for missing values
+# We found missing values in the data and removed NA's in Director_original to "No Director"
+# We do not think we should remove NA's in country as we believe it would be good for EDA to play around with.
+```{r}
+#identify missing values
+summary(netflix_version6)
+
+#Finding number of NAs
+netflix.NACount <- apply(is.na(netflix_version6), 2, sum )
+netflix.NA.PER <- netflix.NACount / dim(netflix_version6)[1] * 100
+netflix.NA.PER
+
+#Removing NAs by column
+netflix_version6$director_orginal[is.na(netflix_version6$director_orginal)] <- "No Director"
+view(netflix_version6)
+
+```
+
+
+4. Impute missing values to median value for IMDB rating
+```{r}
+# Finding median rating value
+median_rating = median(netflix_version6$rating_imdb)
+median_rating
+
+# Changing all Zero values to the median value
+netflix_version6$rating_imdb[netflix_version6$rating_imdb == "0"] <- "6.8"
+```
+
+
+5. Handling duplicates 
+```{r}
+# Finding the number of non-duplcate values
+length(unique(netflix_version6$description_orginal))
+
+# Removing duplicate values
+Netflix_New <- netflix_version6[!duplicated(netflix_version6$description_orginal),]
+```
+
+
+6. Fixing Netflix Original to binary
+#  CHARACTER FOR NETFLIX ORIGINAL CANNOT BE CHANGED!!!
+
+```{r}
+Netflix_New$Original.Network[Netflix_New$Original.Network == "Netflix"] <- 1
+Netflix_New$Original.Network[is.na(Netflix_New$Original.Network)] <- 0
+Netflix_New$Original.Network[Netflix_New$Original.Network == "abc"] <- 0
+Netflix_New$Original.Network[Netflix_New$Original.Network == "Fox"] <- 0
+Netflix_New$Original.Network[Netflix_New$Original.Network == "showcase"] <- 0
+Netflix_New$Original.Network[Netflix_New$Original.Network == "Channel 4"] <- 0
+```
+
+
+7. Handling Outliers
+
+# We believe we do not need to identify any outliers as the rating can only range from 0-10. If the rating exceeded 10 or was below 0, then that would be considered an outlier. 
+```{r}
+
+Netflix_New$rating_imdb <- as.numeric(Netflix_New$rating_imdb)
+```
+
+```{r}
+# Remove Instances with Outlier Values 
+netflix_New_boxplot <- boxplot(Netflix_New$rating_imdb) 
+min_imdb_outlier <- min(netflix_New_boxplot$out)
+clean_netflix <- Netflix_New[Netflix_New$rating_imdb < min_imdb_outlier, ]
+
+```
+
+
+8. Fixing Date Format?????????
+# We tried to change the format of the date in excel as we couldnt change it here. That was also not possible. 
+```{r}
+# Convert date information in format 'dd/mm/yy'
+class(netflix_version6$date_added_orginal)
+
+#Convert character string column to date
+
+```
+
+
+9. Renaming Data 
+```{r}
+names(Netflix_New)[names(Netflix_New) == "title"] <- "Title"
+names(Netflix_New)[names(Netflix_New) == "type_orginal"] <- "Type"
+names(Netflix_New)[names(Netflix_New) == "director_orginal"] <- "Director"
+names(Netflix_New)[names(Netflix_New) == "country_orginal"] <- "Country"
+names(Netflix_New)[names(Netflix_New) == "date_added_orginal"] <- "Date_Added"
+names(Netflix_New)[names(Netflix_New) == "release_year_orginal"] <- "Release_Year"
+names(Netflix_New)[names(Netflix_New) == "listed_in_orginal"] <- "Genre"
+names(Netflix_New)[names(Netflix_New) == "rating_imdb"] <- "IMDB_Rating"
+names(Netflix_New)[names(Netflix_New) == "description_orginal"] <- "Description"
+names(Netflix_New)[names(Netflix_New) == "Original.Network"] <- "Netflix_Original"
+names(Netflix_New)[names(Netflix_New) == "duration"] <- "Duration"
+view(Netflix_New)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
