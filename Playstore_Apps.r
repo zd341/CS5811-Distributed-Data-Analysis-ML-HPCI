@@ -23,6 +23,13 @@ sum(is.na(playstore_user_reviews))
 
 #-------------------------------------------------------------------------------
 
+## 1.3 Scope of cleaning 
+
+                                #** Incomplete **#
+
+
+#-------------------------------------------------------------------------------
+
 # 2. Joining Columns dataset columns 
 
 # playstore_joined <- dplyr::left_join(playstore,playstore_user_reviews,by="App", keep=F)
