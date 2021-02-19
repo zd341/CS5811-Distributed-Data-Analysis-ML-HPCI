@@ -1,7 +1,7 @@
 ##############################################################################################
 #                      World Happiness - Machine Learning Group Project                      #
-#																					Be happy :)                                        #
-#	                                                                                           #
+#				        Be happy :)    		                             #
+#	                                                                                     #
 ##############################################################################################
 
 # Loading Libraries (Please feel free to add those neccesary for the completion of the project)
