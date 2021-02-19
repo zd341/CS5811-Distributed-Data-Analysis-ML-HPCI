@@ -47,7 +47,7 @@ str(world_bank_debt1819)
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#Important Decision Making About The Data Structure 
+#Important Decision Making About The Data Structure| Both Forks in this Section. 
 #---------------------------------------------------------------------------------
 # #Adding a column to distinguish WH2018 dataset by year
 # nrow(world_happiness_2018)
@@ -66,15 +66,15 @@ str(world_bank_debt1819)
 # View(world_happiness_1819)
 #note:- Was getting closer to the solution. Might just add the column for the year.***
 #----------------------------------------------------------------------------------
-#End of Section
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
 #joining WH datasets 
 world_happiness1819 = inner_join(world_happiness_2018,world_happiness_2019,by="Country.or.region",suffix=c("_18","_19"))
 # world_happiness1819 = left_join(world_happiness_2018,world_happiness_2019,by="Country.or.region")
 # write.csv(world_happiness1819,file ="world_happiness1819_col_join.csv")
 #note:- On the left_join there were 4 missing values if you want to retain those, I can run a prediction to estimate the values
+#----------------------------------------------------------------------------------
+#End of Section
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 #----------------------------------------------------------
 #Inspecting for missingness after join
 # apply(world_happiness1819, 2, sumNa)
