@@ -1,6 +1,6 @@
 ##############################################################################################
 #                      World Happiness - Machine Learning Group Project                      #
-#				        Be happy :)    		                             #
+#				          Be happy :)                                        #
 #	                                                                                     #
 ##############################################################################################
 
@@ -48,7 +48,7 @@ str(world_bank_debt1819)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #Might remove this section evaluating how to join these sets horizontally 
 #---------------------------------------------------------------------------------
-Adding a column to distinguish WH2018 dataset by year
+# #Adding a column to distinguish WH2018 dataset by year
 nrow(world_happiness_2018)
 year <- rep(2018,156)
 world_happiness_2018$year <- year
@@ -65,21 +65,34 @@ head(world_happiness_2019)
 # world_happiness_1819 <-  as.data.frame(world_happiness_2018,world_happiness_2019)
 # rows_insert(world_happiness_2018,world_happiness_2019,by="Country.or.region")
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# world_happiness_1819 <- rbind.data.frame(world_happiness_2018,world_happiness_2019)
+world_happiness_1819 <- rbind.data.frame(world_happiness_2018,world_happiness_2019)
+View(world_happiness_1819)
 #note:- Was getting closer to the solution. Might just add the column for the year.***
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #----------------------------------------------------------------------------------
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #joining WH datasets 
-#world_happiness1819 = inner_join(world_happiness_2018,world_happiness_2019,by="Country.or.region")
+# world_happiness1819 = inner_join(world_happiness_2018,world_happiness_2019,by="Country.or.region",suffix=c("_18","_19"))
 # world_happiness1819 = left_join(world_happiness_2018,world_happiness_2019,by="Country.or.region")
 #note:- On the left_join there were 4 missing values if you want to retain those, I can run a prediction to estimate the values
 #----------------------------------------------------------
 #Inspecting for missingness after join
-apply(world_happiness1819, 2, sumNa)
-summary(world_happiness1819) 
-str(world_happiness1819)
-View(world_happiness1819)
+# apply(world_happiness1819, 2, sumNa)
+# summary(world_happiness1819) 
+# str(world_happiness1819)
+# View(world_happiness1819)
+# dim(world_happiness1819)
 #----------------------------------------------------------
+#joining WB datasets 
+
+world_bank_debt1819 %>% 
+	select(Country.Name,Series.Name,X2018..YR2018.) %>% 
+	filter(Series.Name =="Total debt service (% of GNI)") %>% 
+	head()
+
+world_bank_debt1819 %>% 
+	select(Country.Name,Series.Name,X2019..YR2019.) %>% 
+	filter(Series.Name =="Total debt service (% of GNI)") %>% 
+	head()
 
 # VIM::kNN(,k = 5,weights = "mean")
