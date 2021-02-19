@@ -83,7 +83,7 @@ View(world_happiness_1819)
 # View(world_happiness1819)
 # dim(world_happiness1819)
 #----------------------------------------------------------
-#joining WB datasets 
+#Potential Split in WB data
 
 world_bank_debt1819 %>% 
 	select(Country.Name,Series.Name,X2018..YR2018.) %>% 
