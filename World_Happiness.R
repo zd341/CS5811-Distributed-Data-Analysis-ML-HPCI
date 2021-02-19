@@ -1,6 +1,6 @@
 ##############################################################################################
 #                      World Happiness - Machine Learning Group Project                      #
-#				          Be happy :)                                        #
+#					Be happy :)                                          #
 #	                                                                                     #
 ##############################################################################################
 
@@ -88,19 +88,22 @@ world_happiness1819 = inner_join(world_happiness_2018,world_happiness_2019,by="C
 world_bank_18 <- world_bank_debt1819 %>% 
 	select(Country.Name,Series.Name,X2018..YR2018.) %>% 
 	filter(Series.Name =="Total debt service (% of GNI)") 
-
 ## Drop Series Name 2018
 world_bank_18$Series.Name <- NULL
 str(world_bank_18)
+head(world_bank_18,20)
+# test <- stringr::str_replace(world_bank_18$X2018..YR2018.,pattern = "..",replacement = "NA")
 #Note:- Have to change Characters into number characters then convert into numeric type
 #----------------------------------------------------------
 ## Creating WB Columns 2019
 world_bank_19 <- world_bank_debt1819 %>% 
 	select(Country.Name,Series.Name,X2019..YR2019.) %>% 
 	filter(Series.Name =="Total debt service (% of GNI)")  
-	
 ## Drop Series Name 2019	
 world_bank_19$Series.Name <- NULL
 str(world_bank_19)
+# test <- stringr::str_replace(world_bank_19$X2019..YR2019.,pattern = "..",replacement = "NA")
 #Note:- Have to change Characters into number characters then convert into numeric type
 #----------------------------------------------------------
+# Imputation Technique 
+# VIM::kNN(,k = 5,weights = "mean")
