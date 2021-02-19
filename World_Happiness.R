@@ -45,35 +45,35 @@ world_happiness_2019$Perceptions.of.corruption <- NULL
 summary(world_bank_debt1819) 
 str(world_bank_debt1819)
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#Might remove this section evaluating how to join these sets horizontally 
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#Important Decision Making About The Data Structure 
 #---------------------------------------------------------------------------------
 # #Adding a column to distinguish WH2018 dataset by year
-nrow(world_happiness_2018)
-year <- rep(2018,156)
-world_happiness_2018$year <- year
-head(world_happiness_2018)
+# nrow(world_happiness_2018)
+# year <- rep(2018,156)
+# world_happiness_2018$year <- year
+# head(world_happiness_2018)
 # #--------------------------------------------------------------------------------
 # Adding a column to distinguish WH2019 dataset by year
-nrow(world_happiness_2019)
-year <- rep(2019,156)
-world_happiness_2019$year <- year
-head(world_happiness_2019)
+# nrow(world_happiness_2019)
+# year <- rep(2019,156)
+# world_happiness_2019$year <- year
+# head(world_happiness_2019)
 #----------------------------------------------------------------------------------
-# Creating a dataframe from both WH2018/19
-# world_happiness_1819 = rbind(world_happiness_2018,world_happiness_2019)
-# world_happiness_1819 <-  as.data.frame(world_happiness_2018,world_happiness_2019)
-# rows_insert(world_happiness_2018,world_happiness_2019,by="Country.or.region")
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-world_happiness_1819 <- rbind.data.frame(world_happiness_2018,world_happiness_2019)
-View(world_happiness_1819)
+# world_happiness_1819 <- rbind.data.frame(world_happiness_2018,world_happiness_2019)
+# # write.csv(world_happiness_1819,file = "world_happiness_rbind.csv")
+# View(world_happiness_1819)
 #note:- Was getting closer to the solution. Might just add the column for the year.***
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #----------------------------------------------------------------------------------
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#End of Section
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
 #joining WH datasets 
-# world_happiness1819 = inner_join(world_happiness_2018,world_happiness_2019,by="Country.or.region",suffix=c("_18","_19"))
+world_happiness1819 = inner_join(world_happiness_2018,world_happiness_2019,by="Country.or.region",suffix=c("_18","_19"))
 # world_happiness1819 = left_join(world_happiness_2018,world_happiness_2019,by="Country.or.region")
+# write.csv(world_happiness1819,file ="world_happiness1819_col_join.csv")
 #note:- On the left_join there were 4 missing values if you want to retain those, I can run a prediction to estimate the values
 #----------------------------------------------------------
 #Inspecting for missingness after join
@@ -83,16 +83,24 @@ View(world_happiness_1819)
 # View(world_happiness1819)
 # dim(world_happiness1819)
 #----------------------------------------------------------
-#Potential Split in WB data
-
-world_bank_debt1819 %>% 
+# Preparing World Bank Data
+## Creating WB Columns 2018
+world_bank_18 <- world_bank_debt1819 %>% 
 	select(Country.Name,Series.Name,X2018..YR2018.) %>% 
-	filter(Series.Name =="Total debt service (% of GNI)") %>% 
-	head()
+	filter(Series.Name =="Total debt service (% of GNI)") 
 
-world_bank_debt1819 %>% 
+## Drop Series Name 2018
+world_bank_18$Series.Name <- NULL
+str(world_bank_18)
+#Note:- Have to change Characters into number characters then convert into numeric type
+#----------------------------------------------------------
+## Creating WB Columns 2019
+world_bank_19 <- world_bank_debt1819 %>% 
 	select(Country.Name,Series.Name,X2019..YR2019.) %>% 
-	filter(Series.Name =="Total debt service (% of GNI)") %>% 
-	head()
-
-# VIM::kNN(,k = 5,weights = "mean")
+	filter(Series.Name =="Total debt service (% of GNI)")  
+	
+## Drop Series Name 2019	
+world_bank_19$Series.Name <- NULL
+str(world_bank_19)
+#Note:- Have to change Characters into number characters then convert into numeric type
+#----------------------------------------------------------
