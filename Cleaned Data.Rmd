@@ -1,0 +1,135 @@
+---
+title: "Untitled"
+output: html_document
+---
+# INSTALLING PACKAGES 
+```{r}
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+```{r}
+install.packages("VIM")
+library(VIM)
+```
+
+```{r}
+install.packages("dplyr")
+library(dplyr)
+```
+
+# Renaming datasets
+```{r}
+energy = energy_dataset
+weather = weather_features
+```
+
+# 1. Summary of sepearte datasets
+```{r}
+# Checking Datasets
+# Summaries for energy dataset
+summary(energy) 
+str(energy)
+# Summaries for weather_features dataset
+summary(weather) 
+str(weather)
+```
+
+
+# 2.Combining datasets using DPLYR #
+```{r}
+energy_weather <- inner_join(weather_features,energy,by=c("dt_iso" ="time"),suffix=c("_W","_E"))
+```
+
+# 3. Loading Data #
+```{r}
+str(energy_weather)
+```
+
+
+# 4. Renaming Columns
+```{r}
+names(energy_weather)[names(energy_weather) == "dt_iso"] <- "Time"
+```
+
+# 5. Checking for missing values in combined dataset
+```{r}
+#identify missing values
+summary(energy_weather)
+
+#Finding number of NAs
+energy_weather.NACount <- apply(is.na(energy_weather), 2, sum )
+energy_weather.NA.PER <- energy_weather.NACount / dim(energy_weather)[1] * 100
+energy_weather.NA.PER
+```
+
+# 6. Removing columns 
+# The following columns are being removed because of the data only consisting of Zero values. 
+# Additionally, the columns removed were the columns that included missing values 
+```{r}
+energy_weather = select(energy_weather, -c(`generation fossil coal-derived gas`, `generation fossil oil shale`, `generation fossil peat`, `generation geothermal`, `generation hydro pumped storage aggregated`, `generation marine`, `generation wind offshore`, `forecast wind offshore eday ahead`))
+```
+
+
+#7. Checking Missingness
+```{r}
+#Finding Missing Values by creating useful functions
+# SumNA function
+sumNa <- function(x){
+	ty= is.na(x)
+	yt= sum(ty)
+	return(yt)
+}
+
+# Checking for missingness
+apply(energy_weather, 2, sumNa)
+
+# Omitting NA values
+energy_weather = na.omit(energy_weather)
+```
+
+
+
+# 8. Handling duplicates
+```{r}
+# Finding the number of non-duplicate values
+energy_weather_nodup <- unique(energy_weather)
+
+# Removing duplicate values
+energy_weather <- energy_weather[!duplicated(energy_weather),]
+```
+
+# Number of NA
+```{r}
+energy_weather.NACount <- apply(is.na(energy_weather), 2, sum )
+energy_weather.NACount
+```
+
+
+
+# 9. Checking for outliers
+```{r}
+energy_weather_boxplot <- boxplot(energy_weather$) 
+min_ _outlier <- min(energy_weather_boxplot$out)
+clean_energy_weather <- energy_weather[energy_weather$ ...  < min_  _outlier, ]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
