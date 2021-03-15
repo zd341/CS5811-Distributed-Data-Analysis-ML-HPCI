@@ -53,6 +53,7 @@ numeric_variables<-london_smart_meter%>%
   select(is.numeric)
 boxplot(numeric_variables)
 ```
+
 #removing outliers
 ```{r}
 #remove energy_count outlier values 
@@ -66,5 +67,12 @@ clean_energy_count <- london_smart_meter[london_smart_meter$energy_count < min_e
 energy_sum_boxplot <- boxplot(london_smart_meter$energy_sum)
 max_energy_sum_outlier <- max(energy_sum_boxplot$out)
 clean_energy_sum <- london_smart_meter[london_smart_meter$energy_sum < max_energy_sum_outlier , ]
+```
+
+#removing duplicated instances
+```{r}
+london_smart_meter_nodup <- unique(london_smart_meter)
+
+london_smart_meter <- london_smart_meter[!duplicated(london_smart_meter),]
 ```
 
