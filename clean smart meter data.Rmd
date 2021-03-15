@@ -1,0 +1,70 @@
+---
+title: "final group clean data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+```
+#Load data
+```{r}
+london_smart_meter <- read.csv("smart_meter_london.csv")
+```
+
+#summary of data
+```{r}
+summary(london_smart_meter)
+str(london_smart_meter)
+```
+
+#checking for missing values 
+```{r}
+#identifying missing values
+summary(london_smart_meter)
+
+#finding number of NA's
+london_smart_meter.NACount <- apply(is.na(london_smart_meter), 2, sum )
+london_smart_meter.NA.PER <- london_smart_meter.NACount / dim(london_smart_meter)[1] * 100
+london_smart_meter.NA.PER
+
+```
+
+#deleting columns 
+```{r}
+london_smart_meter = select(london_smart_meter, -c('X'))
+```
+
+#changing classification of data
+```{r}
+london_smart_meter$day <- as.Date(london_smart_meter$day)
+london_smart_meter$energy_count <- as.numeric(london_smart_meter$energy_count)
+london_smart_meter$windBearing <- as.numeric(london_smart_meter$windBearing)
+```
+
+
+#detecting outliers
+```{r}
+numeric_variables<-london_smart_meter%>%
+  select(is.numeric)
+boxplot(numeric_variables)
+```
+#removing outliers
+```{r}
+#remove energy_count outlier values 
+energy_count_boxplot <- boxplot(london_smart_meter$energy_count)
+min_energy_count_outlier <- min(energy_count_boxplot$out)
+clean_energy_count <- london_smart_meter[london_smart_meter$energy_count < min_energy_count_outlier , ]
+```
+
+```{r}
+#remove energy_sum outlier values
+energy_sum_boxplot <- boxplot(london_smart_meter$energy_sum)
+max_energy_sum_outlier <- max(energy_sum_boxplot$out)
+clean_energy_sum <- london_smart_meter[london_smart_meter$energy_sum < max_energy_sum_outlier , ]
+```
+
