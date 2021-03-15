@@ -1,0 +1,188 @@
+---
+title: "London_Smartmeter"
+author: 'Group 7'
+date: "25/02/2021"
+output: html_document
+---
+
+
+**TABLE OF CONTENTS**  
+[Importing and Inspecting datasets](#S1)  
+[Basic feature preparation before joinning data](#S2)  
+[Joining three datasets](#S3)  
+[Partial Data cleaning](#S4)  
+[Exploring data through aggregration](#S5)  
+[](#S6)
+
+> Important note:- the main variable containing the large file is reproduced several times to avoid errors occuring at any stage of the  processes. Please clear objects once they are used as they will
+rapidly consume your RAM.
+
+### Libraries
+
+```{r Loading Packages}
+
+#Loading Packages
+if (require(tidyverse)== FALSE) {
+	install.packages("tidyverse")
+} else {
+	library(tidyverse)
+}
+#Note:- Please feel free to add anything you can to contribute to project development
+
+```
+
+
+### Functions 
+
+```{r Useful functions for the project}
+# Sums NA values then uses the apply family of functions to obtain NA values per column
+AppSumNa = function(x){
+  ty = is.na(x)
+  yt= function(y){
+    sum(ty)
+  } 
+  yy = apply(x, 2, yt)
+  return(yy)
+}
+
+# Formula for min max normalization also incorporates apply function
+MinMax = function(x){
+  
+  tx = function(y){
+    (x-min(x))/(max(x)-min(x))
+  }
+  yz = apply(x, 2, tx)
+  return(yz)
+}
+
+#Note:- Please feel free to add anything you can to contribute to project development
+```
+
+## Importing datasets{#S1}
+
+```{r Importing datasets}
+
+# Loading information household dataset
+inform = read.csv("informations_households.csv")
+# Loading daily consumption dataset
+daily = read.csv("dd.csv")
+# Loading daily weather dataset
+weather = read.csv("weather_daily_darksky.csv")
+
+```
+
+## Basic feature preparation before joinning data {#S2}
+
+```{r Selecting important columns from weather dataset}
+# Removing columns that are not required from the weather dataset before joining
+weather = weather[,c(1,2,3,4,6,7,8,12,13,14,18,19,21,22,23,27)]
+#Re-write with names of columns
+
+# Changing weather to date format for the join between datasets
+weather$time = as.Date(weather$time)
+```
+
+## Joining three datasets {#S3}
+
+```{r Joining three relevant datasets}
+# Joining daily dataset using local id column
+joined_set = inner_join(daily,inform,by="LCLid")
+joined_set$day =  as.Date(joined_set$day)
+# Changing the day column of the inform_daily dataset to enable the join between datasets
+# Joining weather data to the dataset
+london_smart_meter = inner_join(joined_set,weather,by=c("day"="time"))
+# Removing a ACORN data quality issue
+london_smart_meter = london_smart_meter %>% 
+  filter(Acorn_grouped !="ACORN-")
+```
+
+## Partial Data cleaning {#S4}
+
+```{r Partial Data Cleaning and Preparation}
+
+# Checking the sum of NA's in the data
+# AppSumNa(london_smart_meter)
+# note:- The code was commented to prevent a computationally costly process from running
+
+# Dropping NA's in question
+noNa_london_smart_meter= na.omit(london_smart_meter)
+
+# Removing two columns that are not needed from the weather dataset
+# noNa_london_smart_meter <- noNa_london_smart_meter[,-c(15,18)]
+# noNa_london_smart_meter <- noNa_london_smart_meter[,-c(3,5,7,9,22,23,25,20,21)]
+noNa_london_smart_meter <- noNa_london_smart_meter[,-c(15,18,24)]
+#Note:- Run in correct order and if you run twice it will compromise which columns were selected.
+
+#Re-ordering the columns in the data
+smart_meter_london = noNa_london_smart_meter[,c(1,2,10,11,12,3,4,5,6,7,8,9,14,15,17,18,20,21,22,23,19,16,25,13)]
+
+#Changing data types
+smart_meter_london$icon = as.factor(smart_meter_london$icon)
+smart_meter_london$stdorToU = as.factor(smart_meter_london$stdorToU)
+smart_meter_london$Acorn = as.character(smart_meter_london$Acorn)
+smart_meter_london$Acorn_grouped = as.factor(smart_meter_london$Acorn_grouped)
+smart_meter_london$precipType = as.factor(smart_meter_london$precipType)
+
+#Checking Structure of the data
+str(smart_meter_london)
+
+
+```
+
+## Exploring data through aggregration {#S5}
+
+```{r Intuition via Aggregation}
+
+## Aggregating and exploring the data 
+#Checking if the sample is representative of the population
+noNa_london_smart_meter %>% 
+  count(Acorn_grouped) %>% 
+  mutate(total=nrow(noNa_london_smart_meter)) %>% 
+  summarise(Acorn_grouped,n, n/total)
+
+noNa_london_smart_meter %>% 
+  count(Acorn_grouped) %>% 
+  mutate(total=nrow(noNa_london_smart_meter)) %>% 
+  summarise(Acorn_grouped,n, n/total)
+
+# Exploring how man users are using STD or ToU
+noNa_london_smart_meter %>% 
+  group_by(stdorToU) %>% 
+  count(stdorToU) 
+
+# Finding out the number of files that contain the samples we require:Comfortable
+noNa_london_smart_meter %>% 
+  filter(Acorn_grouped=="Adversity") %>% 
+  group_by(Acorn_grouped) %>% 
+  count(file) 
+
+# Finding out the number of files that contain the samples we require:Comfortable
+noNa_london_smart_meter %>% 
+  filter(Acorn_grouped=="Comfortable") %>% 
+  group_by(Acorn_grouped) %>% 
+  count(file) 
+
+# Finding out the number of files that contain the samples we require:Affluent
+noNa_london_smart_meter %>% 
+  filter(Acorn_grouped=="Affluent") %>% 
+  group_by(Acorn_grouped) %>% 
+  count(file) 
+
+# 
+smart_meter_london %>% 
+  group_by(icon) %>% 
+  count(icon)
+
+# Exploring features
+smart_meter_london %>% 
+  group_by(precipType) %>% 
+  count(precipType)
+#
+smart_meter_london %>%
+  group_by(summary) %>%
+  count(summary)
+
+```
+
+
+
