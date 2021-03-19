@@ -1,0 +1,247 @@
+---
+title: "Final Cleaned Data"
+output: html_document
+---
+# INSTALLING PACKAGES 
+```{r}
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+```{r}
+install.packages("VIM")
+library(VIM)
+```
+
+```{r}
+install.packages("dplyr")
+library(dplyr)
+```
+
+
+#Load data
+```{r}
+london_smart_meter <- read.csv("smart_meter_london.csv")
+```
+
+#summary of data
+```{r}
+summary(london_smart_meter)
+str(london_smart_meter)
+```
+
+#checking for missing values 
+```{r}
+#identifying missing values
+summary(london_smart_meter)
+#finding number of NA's
+london_smart_meter.NACount <- apply(is.na(london_smart_meter), 2, sum )
+london_smart_meter.NA.PER <- london_smart_meter.NACount / dim(london_smart_meter)[1] * 100
+london_smart_meter.NA.PER
+```
+
+#deleting columns 
+```{r}
+london_smart_meter = select(london_smart_meter, -c('X'))
+```
+
+#changing classification of data
+```{r}
+london_smart_meter$day <- as.Date(london_smart_meter$day)
+london_smart_meter$energy_count <- as.numeric(london_smart_meter$energy_count)
+london_smart_meter$windBearing <- as.numeric(london_smart_meter$windBearing)
+```
+
+
+#detecting outliers
+```{r}
+numeric_variables<-select_if(london_smart_meter, is.numeric)
+boxplot(numeric_variables)
+```
+
+#removing outliers
+```{r}
+#remove energy_count outlier values 
+energy_count_boxplot <- boxplot(london_smart_meter$energy_count)
+min_energy_count_outlier <- min(energy_count_boxplot$out)
+clean_energy_count <- london_smart_meter[london_smart_meter$energy_count < min_energy_count_outlier , ]
+```
+
+```{r}
+#remove energy_sum outlier values
+energy_sum_boxplot <- boxplot(london_smart_meter$energy_sum)
+max_energy_sum_outlier <- max(energy_sum_boxplot$out)
+clean_energy_sum <- london_smart_meter[london_smart_meter$energy_sum < max_energy_sum_outlier , ]
+```
+
+#removing duplicated instances
+```{r}
+london_smart_meter_nodup <- unique(london_smart_meter)
+london_smart_meter <- london_smart_meter[!duplicated(london_smart_meter),]
+```
+
+
+
+### EDA:
+
+```{r}
+library(ggplot2)
+sample <- head(london_smart_meter, n=10000) #Smaller subset for framework
+```
+
+# 1. Summary Statistics
+
+```{r}
+#View structure of data, data types of each variable
+str(london_smart_meter)
+
+#Summary details, statistics for numeric variables and frequencies for categorical variables
+summary(london_smart_meter)
+
+#numeric statistics for the target variable (Energy consumption)
+summary(london_smart_meter$energy_sum)
+
+#View correlation between each pair of variables
+numericset <- select_if(london_smart_meter,is.numeric)
+cor(numericset)
+```
+
+# 2. Graphical Exploration
+
+```{r}
+# Univariate Exploration:
+# Histograms:
+opar <- par()
+par(mfrow = c(2,3))
+hist(london_smart_meter$energy_sum, main = names(london_smart_meter)[11], xlab = names(london_smart_meter)[11])
+hist(london_smart_meter$temperatureMax, main = names(london_smart_meter)[13], xlab = names(london_smart_meter)[13])
+hist(london_smart_meter$cloudCover, main = names(london_smart_meter)[15], xlab = names(london_smart_meter)[15])
+hist(london_smart_meter$windSpeed, main = names(london_smart_meter)[16], xlab = names(london_smart_meter)[16])
+hist(london_smart_meter$visibility, main = names(london_smart_meter)[17], xlab = names(london_smart_meter)[17])
+hist(london_smart_meter$humidity, main = names(london_smart_meter)[18], xlab = names(london_smart_meter)[18])
+par(opar)
+
+# Density Plots:
+opar <- par()
+par(mfrow = c(2,3))
+plot(density(london_smart_meter$energy_sum), main = names(london_smart_meter)[11], xlab = names(london_smart_meter)[11])
+plot(density(london_smart_meter$temperatureMax), main = names(london_smart_meter)[13], xlab = names(london_smart_meter)[13])
+plot(density(london_smart_meter$cloudCover), main = names(london_smart_meter)[15], xlab = names(london_smart_meter)[15])
+plot(density(london_smart_meter$windSpeed), main = names(london_smart_meter)[16], xlab = names(london_smart_meter)[16])
+plot(density(london_smart_meter$visibility), main = names(london_smart_meter)[17], xlab = names(london_smart_meter)[17])
+plot(density(london_smart_meter$humidity), main = names(london_smart_meter)[18], xlab = names(london_smart_meter)[18])
+par(opar)
+
+# Multivariate Exploration:
+# Key Features v/s Energy consumption:
+# Selected Numeric variables: (temperature, windspeed, humidity, cloudcover, visibility), Factors/Categorical variables: (icon, Preciptype)
+
+ggplot(data = london_smart_meter, aes(x = temperatureMax, y = energy_sum)) + geom_point(fill = "blue") + geom_smooth(se = FALSE, method = "gam") + labs(title = "Temp v/s consumption", x = "tempMax", y = "energy_sum")
+ggplot(data = london_smart_meter, aes(x = windSpeed, y = energy_sum)) + geom_point(fill = "blue") + geom_smooth(se = FALSE, method = "gam") + labs(title = "windSpeed v/s consumption", x = "windSpeed", y = "energy_sum")
+ggplot(data = london_smart_meter, aes(x = cloudCover, y = energy_sum)) + geom_point(fill = "blue") + geom_smooth(se = FALSE, method = "gam") + labs(title = "cloudCover v/s consumption", x = "cloudCover", y = "energy_sum")
+ggplot(data = london_smart_meter, aes(x = humidity, y = energy_sum)) + geom_point(fill = "blue") + geom_smooth(se = FALSE, method = "gam") + labs(title = "humidity v/s consumption", x = "humidity", y = "energy_sum")
+ggplot(data = london_smart_meter, aes(x = visibility, y = energy_sum)) + geom_point(fill = "blue") + geom_smooth(se = FALSE, method = "gam") + labs(title = "visibility v/s consumption", x = "visibility", y = "energy_sum")
+ggplot(data = london_smart_meter, aes(x = icon, y = energy_sum)) + geom_boxplot(fill = "blue") +  labs(title = "icon v/s consumption", x = "icon", y = "energy_sum")
+ggplot(data = london_smart_meter, aes(x = precipType, y = energy_sum)) + geom_boxplot(fill = "blue") + labs(title = "precipType v/s consumption", x = "precipType", y = "energy_sum")
+```
+
+Findings:
+1. Temp v/s Energy: Temperature has a negative relationship with energy, furthering the notion that lower temperatures lead to higher consumption e.g. due to heaters.
+2. Wind Speed v/s Energy: Very slight positive effect/constant relationship with energy conusmption.
+3. Humidity v/s Energy: No apparent effect on energy consumption.
+4. Cloud Cover v/s Energy: No apparent effect on energy consumption.
+5. Visibility v/s Energy: No apparent effect on energy consumption.
+6. Icon v/s Energy: "Clear day" category has lowest median energy consumption.
+7. PrecipType v/s Energy: "Snow" precipitation category has a higher median energy consumption.
+
+
+# 3. PCA
+
+```{r}
+# PCA on the dataset (Variables are scaled & centered)
+nvariables <- select(numericset,energy_sum,temperatureMax,visibility,humidity,windSpeed,cloudCover) #Select key/required numeric features (Exclude features eliminated)
+pc_lsmeter <- prcomp(nvariables, center = T, scale. = T)
+
+# Proportion of exaplained variance (PEV) from the std values
+pc_lsmeter_var <- pc_lsmeter$sdev^2
+pc_lsmeter_var
+pc_lsmeter_PEV <- pc_lsmeter_var / sum(pc_lsmeter_var)
+pc_lsmeter_PEV
+
+# Plot the variance per PC, using the plot function on the prcomp object
+plot(pc_lsmeter)
+
+# Cumulative value of PEV for increasing number of additional PCs
+#   80% threshold line to inform the feature extraction
+#     According to the plot the first 3 PCs should be selected
+opar <- par()
+plot(
+  cumsum(pc_lsmeter_PEV),
+  ylim = c(0,1),
+  xlab = 'PC',
+  ylab = 'cumulative PEV',
+  pch = 20,
+  col = 'orange'
+)
+abline(h = 0.8, col = 'red', lty = 'dashed')
+par(opar)
+
+# get and inspect the loadings for each PC
+pc_lsmeter_loadings <- pc_lsmeter$rotation
+pc_lsmeter_loadings
+
+
+# plot the loadings for the first 3 PCs as a barplot
+#   note: two vectors for colours and labels are created for convenience
+opar <- par()
+colvector = c('red', 'orange', 'yellow', 'green', 'cyan', 'blue')
+labvector = c('PC1', 'PC2', 'PC3')
+barplot(
+  pc_lsmeter_loadings[,c(1:3)],
+  beside = T,
+  yaxt = 'n',
+  names.arg = labvector,
+  col = colvector,
+  ylim = c(-1,1),
+  border = 'white',
+  ylab = 'loadings'
+)
+axis(2, seq(-1,1,0.1))
+legend(
+  'bottomright',
+  bty = 'n',
+  col = colvector,
+  pch = 15,
+  row.names(pc_lsmeter_loadings)
+)
+par(opar)
+
+
+# Generate a biplot for each pair of important PCs 
+#   note: the option choices is used to select the PCs - default is 1:2
+opar = par()
+par(mfrow = c(2,2))
+biplot(
+  pc_lsmeter,
+  scale = 0,
+  col = c('grey40','orange')
+)
+biplot(
+  pc_lsmeter,
+  choices = c(1,3),
+  scale = 0,
+  col = c('grey40','orange')
+)
+biplot(
+  pc_lsmeter,
+  choices = c(2,3),
+  scale = 0,
+  col = c('grey40','orange')
+)
+par(opar)
+
+```
+
+
+
+
